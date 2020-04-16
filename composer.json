@@ -21,7 +21,7 @@
 
   "autoload": {
     "psr-4": {
-      "CKSource\\CKFinder\\": "./src/"
+      "CKSource\\CKFinder\\": "src/CKSource/CKFinder"
     }
   }
 }
