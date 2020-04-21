@@ -18,14 +18,13 @@ use CKSource\CKFinder\Command\CommandAbstract;
 use CKSource\CKFinder\Event\BeforeCommandEvent;
 use CKSource\CKFinder\Event\CKFinderEvent;
 use CKSource\CKFinder\Exception\InvalidCommandException;
-use CKSource\CKFinder\Exception\InvalidRequestException;
 use CKSource\CKFinder\Exception\MethodNotAllowedException;
-use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
+use ReflectionClass;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 
 /**
  * The command resolver class.
- *
  * The purpose of this class is to resolve which CKFinder command should be executed
  * for the current request. This process is based on a value passed in the
  * <code>$_GET['command']</code> request variable.
@@ -36,21 +35,18 @@ class CommandResolver implements ControllerResolverInterface
      * The name of the method to execute in commands classes.
      */
     const COMMAND_EXECUTE_METHOD = 'execute';
-
     /**
      * The commands class namespace.
      *
      * @var string $commandsNamespace
      */
     protected $commandsNamespace;
-
     /**
      * The plugins class namespace.
      *
      * @var string $pluginsNamespace
      */
     protected $pluginsNamespace;
-
     /**
      * The app instance.
      *
@@ -61,7 +57,7 @@ class CommandResolver implements ControllerResolverInterface
     /**
      * Constructor.
      *
-     * @param CKFinder   $app
+     * @param CKFinder $app
      */
     public function __construct(CKFinder $app)
     {
@@ -93,15 +89,15 @@ class CommandResolver implements ControllerResolverInterface
      * is then instantiated and used to build a callable.
      *
      * @param Request $request current Request instance
-     *
      * @return callable Callable built to execute the command.
-     *
      * @throws InvalidCommandException   if a valid command cannot be found.
      * @throws MethodNotAllowedException if a command was called using an invalid HTTP method.
+     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function getController(Request $request)
     {
-        $commandName = ucfirst((string) $request->get('command'));
+        $commandName = ucfirst((string)$request->get('command'));
 
         /* @var Command\CommandAbstract $commandObject */
         $commandObject = null;
@@ -110,7 +106,7 @@ class CommandResolver implements ControllerResolverInterface
         $commandClassName = $this->commandsNamespace . $commandName;
 
         if (class_exists($commandClassName)) {
-            $reflectedClass = new \ReflectionClass($commandClassName);
+            $reflectedClass = new ReflectionClass($commandClassName);
             if (!$reflectedClass->isInstantiable()) {
                 throw new InvalidCommandException(sprintf('CKFinder command class %s is not instantiable', $commandClassName));
             }
@@ -143,7 +139,7 @@ class CommandResolver implements ControllerResolverInterface
         }
 
         /* @var $dispatcher \Symfony\Component\EventDispatcher\EventDispatcher */
-        $dispatcher = $this->app['dispatcher'];
+        $dispatcher         = $this->app['dispatcher'];
         $beforeCommandEvent = new BeforeCommandEvent($this->app, $commandName, $commandObject);
 
         $eventName = CKFinderEvent::BEFORE_COMMAND_PREFIX . lcfirst($commandName);
@@ -152,83 +148,8 @@ class CommandResolver implements ControllerResolverInterface
 
         $commandObject = $beforeCommandEvent->getCommandObject();
 
-
         $commandObject->checkPermissions();
 
-        return array($commandObject, self::COMMAND_EXECUTE_METHOD);
-    }
-
-    /**
-     * This method is used to inject objects to controllers.
-     * It depends on arguments taken by the executed controller callable.
-     *
-     * Supported injected types:
-     * Request             - current request object
-     * CKFinder            - application object
-     * EventDispatcher     - event dispatcher
-     * Config              - Config object
-     * Acl                 - Acl object
-     * BackendManager      - BackendManager object
-     * ResourceTypeFactory - ResourceTypeFactory object
-     * WorkingFolder       - WorkingFolder object
-     *
-     * @param Request  $request request object
-     * @param callable $command
-     *
-     * @return array arguments used during the command callable execution
-     */
-    public function getArguments(Request $request, $command)
-    {
-        $r = new \ReflectionMethod($command[0], $command[1]);
-
-        $parameters = $r->getParameters();
-
-        $arguments = array();
-
-        foreach ($parameters as $param) {
-            /* @var $param \ReflectionParameter */
-            if ($reflectionClass = $param->getClass()) {
-                if ($reflectionClass->isInstance($this->app)) {
-                    $arguments[] = $this->app;
-                } elseif ($reflectionClass->isInstance($request)) {
-                    $arguments[] = $request;
-                } elseif ($reflectionClass->isInstance($this->app['dispatcher'])) {
-                    $arguments[] = $this->app['dispatcher'];
-                } elseif ($reflectionClass->isInstance($this->app['config'])) {
-                    $arguments[] = $this->app['config'];
-                }
-
-                // Don't check isInstance to avoid unnecessary instantiation
-                $classShortName = $reflectionClass->getShortName();
-
-                switch ($classShortName) {
-                    case 'BackendFactory':
-                        $arguments[] = $this->app['backend_factory'];
-                        break;
-                    case 'ResourceTypeFactory':
-                        $arguments[] = $this->app['resource_type_factory'];
-                        break;
-                    case 'Acl':
-                        $arguments[] = $this->app['acl'];
-                        break;
-                    case 'WorkingFolder':
-                        $arguments[] = $this->app['working_folder'];
-                        break;
-                    case 'ThumbnailRepository':
-                        $arguments[] = $this->app['thumbnail_repository'];
-                        break;
-                    case 'ResizedImageRepository':
-                        $arguments[] = $this->app['resized_image_repository'];
-                        break;
-                    case 'CacheManager':
-                        $arguments[] = $this->app['cache'];
-                        break;
-                }
-            } else {
-                $arguments[] = null;
-            }
-        }
-
-        return $arguments;
+        return [$commandObject, self::COMMAND_EXECUTE_METHOD];
     }
 }
