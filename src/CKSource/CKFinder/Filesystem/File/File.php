@@ -161,6 +161,16 @@ abstract class File
         return true;
     }
 
+    public function hashFilename()
+    {
+        $uniqueId = uniqid("", true);
+        $extension = end(explode(".", $this->fileName));
+
+        $this->fileName = "{$uniqueId}" . (!empty($extension) ? ".{$extension}" : '');
+
+        return true;
+    }
+
     /**
      * Check whether `$fileName` is a valid file name. Returns `true` on success.
      *

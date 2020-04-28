@@ -70,6 +70,11 @@ class FileUpload extends CommandAbstract
             throw new InvalidUploadException($uploadedFile->getErrorMessage());
         }
 
+        $hashFilename = $config->get('hashFilename');
+        if ($hashFilename === true) {
+            $uploadedFile->hashFilename();
+        }
+
         $uploadedFile->sanitizeFilename();
 
         if ($uploadedFile->wasRenamed()) {
