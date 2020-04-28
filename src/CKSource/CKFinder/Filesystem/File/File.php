@@ -161,7 +161,7 @@ abstract class File
         return true;
     }
 
-    public function hashFilename()
+    public function uniqueFilename()
     {
         $uniqueId = uniqid("", true);
         $extension = end(explode(".", $this->fileName));

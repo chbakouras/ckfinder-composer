@@ -70,15 +70,15 @@ class FileUpload extends CommandAbstract
             throw new InvalidUploadException($uploadedFile->getErrorMessage());
         }
 
-        $hashFilename = $config->get('hashFilename');
-        if ($hashFilename === true) {
-            $uploadedFile->hashFilename();
-        }
+        $uniqueFilename = $config->get('uniqueFilename');
+        if ($uniqueFilename === true) {
+            $uploadedFile->uniqueFilename();
+        } else {
+            $uploadedFile->sanitizeFilename();
 
-        $uploadedFile->sanitizeFilename();
-
-        if ($uploadedFile->wasRenamed()) {
-            $warningErrorCode = Error::UPLOADED_INVALID_NAME_RENAMED;
+            if ($uploadedFile->wasRenamed()) {
+                $warningErrorCode = Error::UPLOADED_INVALID_NAME_RENAMED;
+            }
         }
 
         if (!$uploadedFile->hasValidFilename() || $uploadedFile->isHiddenFile()) {
