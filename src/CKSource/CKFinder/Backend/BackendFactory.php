@@ -118,17 +118,21 @@ class BackendFactory
         });
 
         $this->registerAdapter('s3', function ($backendConfig) {
-            $clientConfig = array(
-                'credentials' => array(
-                    'key'    => $backendConfig['key'],
-                    'secret' => $backendConfig['secret']
-                ),
-                'signature_version' => isset($backendConfig['signature']) ? $backendConfig['signature'] : 'v4',
-                'version' => isset($backendConfig['version']) ? $backendConfig['version'] : 'latest'
-            );
+            if (isset($backendConfig['customClientConfig'])) {
+                $clientConfig = $backendConfig['customClientConfig'];
+            } else {
+                $clientConfig = array(
+                    'credentials' => array(
+                        'key'    => $backendConfig['key'],
+                        'secret' => $backendConfig['secret']
+                    ),
+                    'signature_version' => isset($backendConfig['signature']) ? $backendConfig['signature'] : 'v4',
+                    'version' => isset($backendConfig['version']) ? $backendConfig['version'] : 'latest'
+                );
 
-            if (isset($backendConfig['region'])) {
-                $clientConfig['region'] = $backendConfig['region'];
+                if (isset($backendConfig['region'])) {
+                    $clientConfig['region'] = $backendConfig['region'];
+                }
             }
 
             $client = new S3Client($clientConfig);
