@@ -49,6 +49,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -244,9 +245,9 @@ class CKFinder extends Container implements HttpKernelInterface
      * This handler is executed very early, so if required, the response is set
      * even before the controller for the current request is resolved.
      *
-     * @param GetResponseEvent $event
+     * @param RequestEvent $event
      */
-    public function handleOptionsRequest(GetResponseEvent $event)
+    public function handleOptionsRequest(RequestEvent $event)
     {
         if ($event->getRequest()->isMethod(Request::METHOD_OPTIONS)) {
             $event->setResponse(Response::create('', Response::HTTP_OK, $this->getExtraHeaders()));
