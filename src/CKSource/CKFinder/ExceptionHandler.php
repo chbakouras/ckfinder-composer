@@ -16,9 +16,8 @@ namespace CKSource\CKFinder;
 
 use CKSource\CKFinder\Exception\CKFinderException;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Debug;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use CKSource\CKFinder\Response\JsonResponse;
 use \Symfony\Component\HttpKernel\Exception\HttpException;
@@ -64,9 +63,9 @@ class ExceptionHandler implements EventSubscriberInterface
         }
     }
 
-    public function onCKFinderError(GetResponseForExceptionEvent $event)
+    public function onCKFinderError(ExceptionEvent $event)
     {
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
 
         $exceptionCode = $exception->getCode() ?: Error::UNKNOWN;
 
@@ -86,7 +85,7 @@ class ExceptionHandler implements EventSubscriberInterface
 
         $response = JsonResponse::create()->withError($exceptionCode, $message);
 
-        $event->setException(new HttpException($httpStatusCode));
+        $event->setThrowable(new HttpException($httpStatusCode));
 
         $event->setResponse($response);
 

@@ -18,7 +18,7 @@ use CKSource\CKFinder\CKFinder;
 use CKSource\CKFinder\Filesystem\Path;
 use CKSource\CKFinder\Response\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -257,7 +257,7 @@ class OperationManager
      */
     public function addInfoToResponse()
     {
-        $this->app->on(KernelEvents::RESPONSE, function (FilterResponseEvent $event) {
+        $this->app->on(KernelEvents::RESPONSE, function (ResponseEvent $event) {
             $response = $event->getResponse();
 
             if ($response instanceof JsonResponse) {

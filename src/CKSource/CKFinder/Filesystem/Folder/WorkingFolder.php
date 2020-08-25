@@ -32,7 +32,7 @@ use CKSource\CKFinder\ResizedImage\ResizedImageRepository;
 use CKSource\CKFinder\Utils;
 use League\Flysystem\Util\MimeType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use CKSource\CKFinder\Thumbnail\ThumbnailRepository;
 
@@ -520,9 +520,9 @@ class WorkingFolder extends Folder implements EventSubscriberInterface
     /**
      * Adds the current folder information to the response.
      *
-     * @param FilterResponseEvent $event
+     * @param ResponseEvent $event
      */
-    public function addCurrentFolderInfo(FilterResponseEvent $event)
+    public function addCurrentFolderInfo(ResponseEvent $event)
     {
         /* @var JsonResponse $response */
         $response = $event->getResponse();

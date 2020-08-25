@@ -46,10 +46,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -269,9 +268,9 @@ class CKFinder extends Container implements HttpKernelInterface
     /**
      * Creates a response.
      *
-     * @param GetResponseForControllerResultEvent $event
+     * @param ViewEvent $event
      */
-    public function createResponse(GetResponseForControllerResultEvent $event)
+    public function createResponse(ViewEvent $event)
     {
         /* @var $dispatcher EventDispatcher */
         $dispatcher = $this['dispatcher'];
@@ -287,10 +286,10 @@ class CKFinder extends Container implements HttpKernelInterface
     /**
      * Fires `afterCommand` events.
      *
-     * @param FilterResponseEvent $event
-     * @return \Symfony\Component\HttpFoundation\Response|static
+     * @param ResponseEvent $event
+     * @return void
      */
-    public function afterCommand(FilterResponseEvent $event)
+    public function afterCommand(ResponseEvent $event)
     {
         /* @var $dispatcher EventDispatcher */
         $dispatcher = $this['dispatcher'];
