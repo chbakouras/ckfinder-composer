@@ -33,7 +33,7 @@ class CreateFolder extends CommandAbstract
 
         $createFolderEvent = new CreateFolderEvent($this->app, $workingFolder, $newFolderName);
 
-        $dispatcher->dispatch(CKFinderEvent::CREATE_FOLDER, $createFolderEvent);
+        $dispatcher->dispatch($createFolderEvent, CKFinderEvent::CREATE_FOLDER);
 
         $created = false;
         $createdFolderName = null;

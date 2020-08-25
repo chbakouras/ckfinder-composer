@@ -38,7 +38,7 @@ class DownloadFile extends CommandAbstract
 
         $downloadedFileEvent = new DownloadFileEvent($this->app, $downloadedFile);
 
-        $dispatcher->dispatch(CKFinderEvent::DOWNLOAD_FILE, $downloadedFileEvent);
+        $dispatcher->dispatch($downloadedFileEvent, CKFinderEvent::DOWNLOAD_FILE);
 
         if ($downloadedFileEvent->isPropagationStopped()) {
             throw new AccessDeniedException();

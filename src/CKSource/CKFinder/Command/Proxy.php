@@ -75,7 +75,7 @@ class Proxy extends CommandAbstract
 
         $proxyDownload = new ProxyDownloadEvent($this->app, $file);
 
-        $dispatcher->dispatch(CKFinderEvent::PROXY_DOWNLOAD, $proxyDownload);
+        $dispatcher->dispatch($proxyDownload, CKFinderEvent::PROXY_DOWNLOAD);
 
         if ($proxyDownload->isPropagationStopped()) {
             throw new AccessDeniedException();

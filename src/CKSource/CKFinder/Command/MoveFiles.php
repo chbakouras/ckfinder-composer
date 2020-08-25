@@ -75,7 +75,7 @@ class MoveFiles extends CommandAbstract
 
             if ($movedFile->isValid()) {
                 $moveFileEvent = new MoveFileEvent($this->app, $movedFile);
-                $dispatcher->dispatch(CKFinderEvent::MOVE_FILE, $moveFileEvent);
+                $dispatcher->dispatch($moveFileEvent, CKFinderEvent::MOVE_FILE);
 
                 if (!$moveFileEvent->isPropagationStopped()) {
                     if ($movedFile->doMove()) {

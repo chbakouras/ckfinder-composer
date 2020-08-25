@@ -277,7 +277,7 @@ class CKFinder extends Container implements HttpKernelInterface
 
         $commandName = $event->getRequest()->get('command');
         $eventName   = CKFinderEvent::CREATE_RESPONSE_PREFIX . lcfirst($commandName);
-        $dispatcher->dispatch($eventName, $event);
+        $dispatcher->dispatch($event, $eventName);
 
         $controllerResult = $event->getControllerResult();
         $event->setResponse(JsonResponse::create($controllerResult));
@@ -297,7 +297,7 @@ class CKFinder extends Container implements HttpKernelInterface
         $commandName       = $event->getRequest()->get('command');
         $eventName         = CKFinderEvent::AFTER_COMMAND_PREFIX . lcfirst($commandName);
         $afterCommandEvent = new AfterCommandEvent($this, $commandName, $event->getResponse());
-        $dispatcher->dispatch($eventName, $afterCommandEvent);
+        $dispatcher->dispatch($afterCommandEvent, $eventName);
 
         // #161 Clear any garbage from the output
         Response::closeOutputBuffers(0, false);

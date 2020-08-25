@@ -75,7 +75,7 @@ class CopyFiles extends CommandAbstract
 
             if ($copiedFile->isValid()) {
                 $copyFileEvent = new CopyFileEvent($this->app, $copiedFile);
-                $dispatcher->dispatch(CKFinderEvent::COPY_FILE, $copyFileEvent);
+                $dispatcher->dispatch($copyFileEvent, CKFinderEvent::COPY_FILE);
 
                 if (!$copyFileEvent->isPropagationStopped()) {
                     if ($copiedFile->doCopy()) {

@@ -144,7 +144,7 @@ class CommandResolver implements ControllerResolverInterface
 
         $eventName = CKFinderEvent::BEFORE_COMMAND_PREFIX . lcfirst($commandName);
 
-        $dispatcher->dispatch($eventName, $beforeCommandEvent);
+        $dispatcher->dispatch($beforeCommandEvent, $eventName);
 
         $commandObject = $beforeCommandEvent->getCommandObject();
 

@@ -39,7 +39,7 @@ class RenameFolder extends CommandAbstract
 
         $renameFolderEvent = new RenameFolderEvent($this->app, $workingFolder, $newFolderName);
 
-        $dispatcher->dispatch(CKFinderEvent::RENAME_FOLDER, $renameFolderEvent);
+        $dispatcher->dispatch($renameFolderEvent, CKFinderEvent::RENAME_FOLDER);
 
         if (!$renameFolderEvent->isPropagationStopped()) {
             $newFolderName = $renameFolderEvent->getNewFolderName();

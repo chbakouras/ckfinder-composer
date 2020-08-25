@@ -68,7 +68,7 @@ class DeleteFiles extends CommandAbstract
 
             if ($deletedFile->isValid()) {
                 $deleteFileEvent = new DeleteFileEvent($this->app, $deletedFile);
-                $dispatcher->dispatch(CKFinderEvent::DELETE_FILE, $deleteFileEvent);
+                $dispatcher->dispatch($deleteFileEvent, CKFinderEvent::DELETE_FILE);
 
                 if (!$deleteFileEvent->isPropagationStopped()) {
                     if ($deletedFile->doDelete()) {

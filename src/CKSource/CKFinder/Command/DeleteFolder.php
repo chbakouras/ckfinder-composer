@@ -38,7 +38,7 @@ class DeleteFolder extends CommandAbstract
 
         $deleteFolderEvent = new DeleteFolderEvent($this->app, $workingFolder);
 
-        $dispatcher->dispatch(CKFinderEvent::DELETE_FOLDER, $deleteFolderEvent);
+        $dispatcher->dispatch($deleteFolderEvent, CKFinderEvent::DELETE_FOLDER);
 
         $deleted = false;
 

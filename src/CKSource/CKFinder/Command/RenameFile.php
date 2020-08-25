@@ -52,7 +52,7 @@ class RenameFile extends CommandAbstract
         if ($renamedFile->isValid()) {
             $renamedFileEvent = new RenameFileEvent($this->app, $renamedFile);
 
-            $dispatcher->dispatch(CKFinderEvent::RENAME_FILE, $renamedFileEvent);
+            $dispatcher->dispatch($renamedFileEvent, CKFinderEvent::RENAME_FILE);
 
             if (!$renamedFileEvent->isPropagationStopped()) {
                 $renamed = $renamedFile->doRename();

@@ -114,7 +114,7 @@ class SaveImage extends CommandAbstract
             $uploadedImage->getInfo()
         );
 
-        $dispatcher->dispatch(CKFinderEvent::SAVE_IMAGE, $editFileEvent);
+        $dispatcher->dispatch($editFileEvent, CKFinderEvent::SAVE_IMAGE);
 
         $saved = false;
 

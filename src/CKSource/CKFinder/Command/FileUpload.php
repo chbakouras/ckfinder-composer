@@ -139,7 +139,7 @@ class FileUpload extends CommandAbstract
         }
 
         $event = new FileUploadEvent($this->app, $uploadedFile);
-        $dispatcher->dispatch(CKFinderEvent::FILE_UPLOAD, $event);
+        $dispatcher->dispatch($event, CKFinderEvent::FILE_UPLOAD);
 
         if (!$event->isPropagationStopped()) {
             $uploadedFileStream = $uploadedFile->getContentsStream();
