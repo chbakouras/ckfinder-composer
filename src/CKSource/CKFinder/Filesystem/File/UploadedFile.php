@@ -21,7 +21,7 @@ use CKSource\CKFinder\Exception\AccessDeniedException;
 use CKSource\CKFinder\Exception\InvalidUploadException;
 use CKSource\CKFinder\Filesystem\Folder\WorkingFolder;
 use CKSource\CKFinder\Utils;
-use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
+use Symfony\Component\Mime\MimeTypes;
 use Symfony\Component\HttpFoundation\File\UploadedFile as UploadedFileBase;
 
 /**
@@ -228,9 +228,9 @@ class UploadedFile extends File
      */
     public function getMimeType()
     {
-        $guesser = MimeTypeGuesser::getInstance();
+        $mimeTypes = new MimeTypes();
 
-        return $guesser->guess($this->tempFilePath);
+        return $mimeTypes->guessMimeType($this->tempFilePath);
     }
 
     /**

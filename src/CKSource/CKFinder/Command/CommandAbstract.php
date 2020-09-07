@@ -96,7 +96,7 @@ abstract class CommandAbstract
 
     /**
      * This method is not defined as abstract to allow for parameter injection.
-     * @see CKSource\CKFinder\CommandResolver::getArguments()
+     * @see \CKSource\CKFinder\CommandResolver::getArguments()
      */
     // public abstract function execute();
 }
