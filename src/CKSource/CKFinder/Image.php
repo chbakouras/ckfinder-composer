@@ -207,7 +207,7 @@ class Image
             $this->gdImage = imagecreatefromstring($imageData);
         }
 
-        if (!is_resource($this->gdImage)) {
+        if (!($this->gdImage instanceof \GdImage)) {
             throw new CKFinderException('Unsupported image type (not resource): ' . $this->mime);
         }
 
