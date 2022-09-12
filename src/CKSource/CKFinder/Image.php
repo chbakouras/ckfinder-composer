@@ -207,11 +207,25 @@ class Image
             $this->gdImage = imagecreatefromstring($imageData);
         }
 
-        if (!($this->gdImage instanceof \GdImage)) {
-            throw new CKFinderException('Unsupported image type (not resource): ' . $this->mime);
+        if ($this->isPhp8()) {
+            if (!($this->gdImage instanceof \GdImage)) {
+                throw new CKFinderException('Unsupported image type (not resource): ' . $this->mime);
+            }
+        } else {
+            if (!(is_resource($this->gdImage))) {
+                throw new CKFinderException('Unsupported image type (not resource): ' . $this->mime);
+            }
         }
 
         unset($imageData);
+    }
+
+    private function isPhp8(): bool
+    {
+        $version      = explode('.', PHP_VERSION);
+        $majorVersion = $version['0'];
+
+        return $majorVersion === "8";
     }
 
     /**
